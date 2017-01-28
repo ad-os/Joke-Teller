@@ -1,28 +1,19 @@
 package com.udacity.gradle.builditbigger;
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
-import com.example.adhyan.myapplication.backend.myApi.MyApi;
-import com.example.android.displayjokes.DisplayJokesActivity;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.extensions.android.json.AndroidJsonFactory;
-
-import java.io.IOException;
-
 
 /**
- * A placeholder fragment containing a simple view.
+ * Created by adhyan on 1/27/17.
  */
+
+
 public class MainActivityFragment extends Fragment {
 
     public MainActivityFragment() {

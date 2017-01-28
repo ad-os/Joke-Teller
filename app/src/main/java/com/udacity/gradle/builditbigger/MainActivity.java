@@ -20,10 +20,9 @@ import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import java.io.IOException;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements EndpointsAsyncTask.AsyncResponse {
 
     private ProgressBar mProgressBar;
-    private static MyApi myApiService = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,43 +55,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void tellJoke(View view) {
-        new EndpointsAsyncTask().execute(this);
+        EndpointsAsyncTask endpointsAsyncTask = new EndpointsAsyncTask();
+        endpointsAsyncTask.mAsyncResponse = this;
+        mProgressBar.setVisibility(View.VISIBLE);
+        endpointsAsyncTask.execute();
     }
 
-    private class EndpointsAsyncTask extends AsyncTask<Context, Void, String> {
-
-        private Context context;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mProgressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected String doInBackground(Context... params) {
-            context = params[0];
-            if(myApiService == null) {  // Only do this once
-                MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
-                        new AndroidJsonFactory(), null)
-                        .setRootUrl("https://adroit-citadel-109713.appspot.com/_ah/api/");
-                myApiService = builder.build();
-            }
-
-
-            try {
-                return myApiService.getJokes().execute().getData();
-            } catch (IOException e) {
-                return e.getMessage();
-            }
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            mProgressBar.setVisibility(View.GONE);
-            Intent intent = new Intent(context, DisplayJokesActivity.class);
-            intent.putExtra(context.getString(R.string.joke_key), result);
-            context.startActivity(intent);
-        }
+    @Override
+    public void processFinish(String output) {
+        mProgressBar.setVisibility(View.GONE);
+        Intent intent = new Intent(this, DisplayJokesActivity.class);
+        intent.putExtra(getString(R.string.joke_key), output);
+        startActivity(intent);
     }
 }
